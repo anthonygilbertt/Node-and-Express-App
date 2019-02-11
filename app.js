@@ -40,7 +40,10 @@ app.put('/api/courses/:id', (req, res) => {
   //look up the course ID
   //if the course ID does not exist, we return 404
   let course = courses.find(c => c.id === parseInt(req.params.id));
-  if (!course) res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
+  if (!course) {
+    res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
+    return;
+  }
 
   //otherwise we need to validate the course - Joi schema 
   //If Invalid, return 400 - Bad Request
@@ -74,7 +77,7 @@ app.delete('/api/courses/:id', (req, res) => {
   //look up the course
   let course = courses.find(c => c.id === parseInt(req.params.id));
   //if it does not exist -return 404
-  if (!course) res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
+  if (!course) return res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
   // otherwise if it exists, delete it
   const index = courses.indexOf(course);
   courses.splice(index, 1);
@@ -87,7 +90,7 @@ app.delete('/api/courses/:id', (req, res) => {
 
 app.get('/api/courses/:id', (req, res) => {
   let course = courses.find(c => c.id === parseInt(req.params.id));
-  if (!course) res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
+  if (!course) return res.status(404).send('The course with the given ID was not found'); //404 -> this means Object not found
   res.send(course);
 });
 
