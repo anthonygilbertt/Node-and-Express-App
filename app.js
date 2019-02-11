@@ -1,6 +1,6 @@
-const express = require('express')
-const app = express()
-const Joi = require('joi')
+const Joi = require('joi');//a class is returned from this module and classes are PascalCase
+const express = require('express');
+const app = express();
 app.use(express.json());
 
 const courses = [
@@ -22,11 +22,17 @@ app.get('/api/courses', (req, res) => {
 
 
 app.post('/api/courses', (req, res) => {
-//here we can write some validation logic
-//you always want to write validation logic at the beginning of the route handler
-if (!req.body.name || req.body.name.length < 3) {
-    //400  Bad request
-    res.status(400).send('Name is required and should me minimu of 3 characters');
+    //Joi schema 
+    const schema = Joi.object().keys({
+        // id: Joi.number().integer().min(1).max(255).required(),
+        name: Joi.string().min(3).required()
+    }).with('id', 'name');//
+
+    const result = Joi.validate(req.body, schema);
+    //here we can write some validation logic
+    //you always want to write validation logic at the beginning of the route handler
+if (result.error) {    
+    res.status(400).send(result.error.details[0].message); //400  Bad request
     return;
 }
 
